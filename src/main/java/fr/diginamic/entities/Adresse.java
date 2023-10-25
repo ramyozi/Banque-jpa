@@ -1,18 +1,91 @@
 package fr.diginamic.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.Embeddable;
 
-@Entity
+@Embeddable
 public class Adresse {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	int id;
 	int numero;
 	String rue;
 	int codePostal;
 	String ville;
+
+	/**
+	 * Constructeur
+	 * 
+	 */
+	public Adresse() {
+	}
+
+	/**
+	 * Getter
+	 * 
+	 * @return the numero
+	 */
+	public int getNumero() {
+		return numero;
+	}
+
+	/**
+	 * Setter
+	 * 
+	 * @param numero the numero to set
+	 */
+	public void setNumero(int numero) {
+		this.numero = numero;
+	}
+
+	/**
+	 * Getter
+	 * 
+	 * @return the rue
+	 */
+	public String getRue() {
+		return rue;
+	}
+
+	/**
+	 * Setter
+	 * 
+	 * @param rue the rue to set
+	 */
+	public void setRue(String rue) {
+		this.rue = rue;
+	}
+
+	/**
+	 * Getter
+	 * 
+	 * @return the codePostal
+	 */
+	public int getCodePostal() {
+		return codePostal;
+	}
+
+	/**
+	 * Setter
+	 * 
+	 * @param codePostal the codePostal to set
+	 */
+	public void setCodePostal(int codePostal) {
+		this.codePostal = codePostal;
+	}
+
+	/**
+	 * Getter
+	 * 
+	 * @return the ville
+	 */
+	public String getVille() {
+		return ville;
+	}
+
+	/**
+	 * Setter
+	 * 
+	 * @param ville the ville to set
+	 */
+	public void setVille(String ville) {
+		this.ville = ville;
+	}
 
 }
