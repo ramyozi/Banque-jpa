@@ -1,9 +1,19 @@
 package fr.diginamic.entities;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Client {
@@ -11,13 +21,12 @@ public class Client {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	int id;
 
-	@Column(length = 255, nullable = false)
+	@Column(length = 255)
 	String nom;
 
-	@Column(length = 255, nullable = false)
+	@Column(length = 255)
 	String prenom;
 
-	@Column(nullable = false)
 	Date dateNaissance;
 
 	@Embedded
@@ -25,7 +34,7 @@ public class Client {
 
 	@ManyToMany
 	@JoinTable(name = "client_compte", joinColumns = @JoinColumn(name = "client_id"), inverseJoinColumns = @JoinColumn(name = "compte_id"))
-	List<Compte> comptes;
+    private List<Compte> comptes = new ArrayList<>(); 
 
 	@ManyToOne
 	@JoinColumn(name = "banque_id")

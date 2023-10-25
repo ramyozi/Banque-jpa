@@ -5,12 +5,14 @@ import java.util.List;
 import javax.persistence.*;
 
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 public class Compte {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	int id;
 
-	@Column(length = 255, nullable = false)
+	@Column(length = 255)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
 	String numero;
 
 	Double solde;

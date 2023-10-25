@@ -1,61 +1,91 @@
 package fr.diginamic;
 
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.persistence.*;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Persistence;
 
-import fr.diginamic.entities.*;
+import fr.diginamic.entities.Adresse;
+import fr.diginamic.entities.Banque;
+import fr.diginamic.entities.Client;
+import fr.diginamic.entities.comptes.AssuranceVie;
+import fr.diginamic.entities.comptes.LivretA;
+import fr.diginamic.entities.comptes.Virement;
 
+
+
+/**
+ * 
+ */
 public class App {
 
+	/**
+	 * @param args
+	 */
 	public static void main(String[] args) {
-		EntityManagerFactory emf = Persistence
-				.createEntityManagerFactory("banque-jpa");
+		
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("banque-jpa");
 		EntityManager em = emf.createEntityManager();
-		EntityTransaction et = em.getTransaction();
+		EntityTransaction transaction = em.getTransaction();
+		Adresse adresse = new Adresse(17, "beaucaire",75000, "Paris");
+		List<Client> clients = new ArrayList<Client>();
+		List<Banque> banques = new ArrayList<Banque>();
+		List<Virement> virementsAssuranceVie = new ArrayList<Virement>();
+		List<Virement> virementsLivret = new ArrayList<Virement>();
+		transaction.begin();
+		
+		
+		
+		Client client = new Client();
+		client.setAdresse(adresse);
+		client.setDateNaissance(new java.util.Date(90, 7, 6));
+		client.setNom("Doe");
+		client.setPrenom("John");
+		clients.add(client);
+		Banque banque = new Banque();
+		banque.setNom("harry");
+		banques.add(banque);
+		banque.setClients(clients);
+		client.setBanque(banque);
+		LivretA livretA = new LivretA();
+		livretA.setNumero("1096");
+		livretA.setSolde(150.1);
+		livretA.setTaux(2.5);
+		livretA.setClients(clients);
+		AssuranceVie assuranceVie = new AssuranceVie();
+		assuranceVie.setClients(clients);
+		assuranceVie.setDateFin(new java.util.Date(150, 7, 6));
+		assuranceVie.setNumero("65");
+		assuranceVie.setSolde(150.3);
+		assuranceVie.setTaux(1.2);
+				
+		// Insérer des opérations de type virement sur un compte
+		Virement virementAssuranceVie = new Virement();
+		virementAssuranceVie.setDateOperation(new java.util.Date(150, 5, 3));
+		virementAssuranceVie.setMontant(50.0);
+		virementAssuranceVie.setMotif("Virement vers le compte d'Assurance Vie");
+		virementAssuranceVie.setBeneficiaire("Compte Assurance Vie");
+		virementAssuranceVie.setCompte(assuranceVie);
+		virementsAssuranceVie.add(virementAssuranceVie);
 
-		et.begin();
+		Virement virementLivretA = new Virement();
+		virementLivretA.setDateOperation(new java.util.Date(150, 6, 5));
+		virementLivretA.setMontant(30.0);
+		virementLivretA.setMotif("Virement vers le compte Livret A");
+		virementLivretA.setBeneficiaire("Compte Livret A");
+		virementLivretA.setCompte(livretA);
+		virementsLivret.add(virementLivretA);
 
-        try {
-            Banque banque = new Banque();
-            banque.setNom("MaBanque");
-            em.persist(banque);
-
-            Client client = new Client();
-            client.setNom("Doe");
-            client.setPrenom("John");
-            client.setDateNaissance(new Date());
-
-            Adresse adresse = new Adresse();
-            adresse.setNumero(123);
-            adresse.setRue("Rue de la Paix");
-            adresse.setCodePostal(75001);
-            adresse.setVille("Paris");
-
-            client.setAdresse(adresse);
-            client.setBanque(banque);
-
-            em.persist(client);
-
-            Compte compte = new Compte();
-            compte.setNumero("12345");
-            compte.setSolde(1000.0);
-            em.persist(compte);
-
-            Operation operation = new Operation();
-            operation.setDateOperation(new Date());
-            operation.setMontant(50.0);
-            operation.setMotif("Deposit");
-            operation.setCompte(compte);
-            em.persist(operation);
-
-            et.commit();
-        } catch (Exception e) {
-            et.rollback();
-            e.printStackTrace();
-        } finally {
-            em.close();
-            emf.close();
-        }
-    }
+		em.persist(virementAssuranceVie);
+		em.persist(virementLivretA);
+		
+		em.persist(assuranceVie);
+		em.persist(livretA);
+		em.persist(banque);
+		em.persist(client);
+		transaction.commit();	
+	}
 }
